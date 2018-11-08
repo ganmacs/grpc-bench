@@ -22,16 +22,11 @@ import (
 	"flag"
 	"fmt"
 	"net"
-	_ "net/http/pprof"
 	"os"
 	"os/signal"
-	"runtime"
-	"runtime/pprof"
-	"time"
 
 	"google.golang.org/grpc/benchmark"
 	"google.golang.org/grpc/grpclog"
-	"google.golang.org/grpc/internal/syscall"
 )
 
 var (
@@ -49,33 +44,13 @@ func main() {
 		grpclog.Fatalf("Failed to listen: %v", err)
 	}
 	defer lis.Close()
+	fmt.Println("-- Start --")
 
-	cf, err := os.Create("/tmp/" + *testName + ".cpu")
-	if err != nil {
-		grpclog.Fatalf("Failed to create file: %v", err)
-	}
-	defer cf.Close()
-	pprof.StartCPUProfile(cf)
-	cpuBeg := syscall.GetCPUTime()
-	// Launch server in a separate goroutine.
 	stop := benchmark.StartServer(benchmark.ServerInfo{Type: "protobuf", Listener: lis})
-	// Wait on OS terminate signal.
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)
 	<-ch
-	cpu := time.Duration(syscall.GetCPUTime() - cpuBeg)
 	stop()
-	pprof.StopCPUProfile()
-	mf, err := os.Create("/tmp/" + *testName + ".mem")
-	if err != nil {
-		grpclog.Fatalf("Failed to create file: %v", err)
-	}
-	defer mf.Close()
-	runtime.GC() // materialize all statistics
-	if err := pprof.WriteHeapProfile(mf); err != nil {
-		grpclog.Fatalf("Failed to write memory profile: %v", err)
-	}
-	fmt.Println("Server CPU utilization:", cpu)
-	fmt.Println("Server CPU profile:", cf.Name())
-	fmt.Println("Server Mem Profile:", mf.Name())
+
+	fmt.Println("-- Finish --")
 }

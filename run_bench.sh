@@ -64,16 +64,9 @@ run(){
   do
     port=$((${base_port}+${delta}))
 
-    # Launch the server in background
-    ${out_dir}/server --port=${port} --test_name="Server_"${test_name}&
-    server_pid=$(echo $!)
-
     # Launch the client
     ${out_dir}/client --port=${port} --d=${dur} --w=${warmup} --r=${nr} --c=${nc} --req=${req_sz} --resp=${resp_sz} --rpc_type=${r_type}  --test_name="client_"${test_name}
     client_status=$(echo $?)
-
-    kill -INT ${server_pid}
-    wait ${server_pid}
 
     if [ ${client_status} == 0 ]; then
       break
@@ -172,7 +165,7 @@ while [ $# -gt 0 ]; do
 done
 
 # Build server and client
-out_dir=$(mktemp -d oss_benchXXX)
+out_dir="test_client"
 
 go build -o ${out_dir}/server $GOPATH/src/google.golang.org/grpc/benchmark/server/main.go && go build -o ${out_dir}/client $GOPATH/src/google.golang.org/grpc/benchmark/client/main.go
 if [ $? != 0 ]; then
