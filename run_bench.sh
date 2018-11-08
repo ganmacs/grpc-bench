@@ -167,7 +167,7 @@ done
 # Build server and client
 out_dir="test_client"
 
-go build -o ${out_dir}/server $GOPATH/src/google.golang.org/grpc/benchmark/server/main.go && go build -o ${out_dir}/client $GOPATH/src/google.golang.org/grpc/benchmark/client/main.go
+go build -o ${out_dir}/client benchmark/client/main.go
 if [ $? != 0 ]; then
   clean_and_die 1
 fi
