@@ -4,7 +4,7 @@ GEM
     google-protobuf (3.6.1)
     googleapis-common-protos-types (1.0.2)
       google-protobuf (~> 3.0)
-    grpc (1.16.0-universal-darwin)
+    grpc (1.18.0)
       google-protobuf (~> 3.1)
       googleapis-common-protos-types (~> 1.0.0)
 
