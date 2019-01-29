@@ -4,5 +4,5 @@ source "https://rubygems.org"
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem "griffin", github: 'ganmacs/griffin', branch: 'multi-threads-per-tcp-connetction'
-gem "grpc_kit", github: 'ganmacs/grpc_kit', branch: 'multi-threads'
+gem "griffin", github: 'ganmacs/griffin', branch: 'dont-use-SO_REUSEPORT'
+gem "grpc_kit"
